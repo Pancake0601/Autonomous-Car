@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car Controller</title>
+<style>
+    /* Style for buttons */
+    .controller {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        gap: 10px;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .btn {
+        padding: 20px;
+        font-size: 18px;
+        cursor: pointer;
+        border: 2px solid #333;
+        border-radius: 50%;
+        background-color: #f0f0f0;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #ddd;
+    }
+
+    .forward {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .backward {
+        grid-column: 2;
+        grid-row: 3;
+    }
+
+    .left {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .right {
+        grid-column: 3;
+        grid-row: 2;
+    }
+
+    /* Style for the new button */
+    #sendLocationBtn {
+        margin: 20px auto;
+        display: block;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #sendLocationBtn:hover {
+        background-color: #45a049;
+    }
+</style>
+</head>
+<body>
+    <h1 style="text-align: center;">Car Controller</h1>
+    <div class="controller">
+        <!-- Left Button -->
+        <button class="btn left" id="leftBtn">Left</button>
+        <!-- Forward Button -->
+        <button class="btn forward" id="forwardBtn">Forward</button>
+        <!-- Right Button -->
+        <button class="btn right" id="rightBtn">Right</button>
+        <!-- Backward Button -->
+        <button class="btn backward" id="backwardBtn">Backward</button>
+    </div>
+
+    <!-- Send Location Button -->
+    <button id="sendLocationBtn">Send Location</button>
+
+    <!-- Script to handle button click and location sending -->
+    <script>
+        const ipAddress = '192.168.43.60'; // Change this to your ESP8266 IP address
+        // Function to send location
+        function sendLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    const url = `http://${ipAddress}/?latitude=${latitude}&longitude=${longitude}`;
+
+                    fetch(url)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            console.log('Location sent successfully:', { latitude, longitude });
+                        })
+                        .catch(error => {
+                            console.error('Error sending location:', error);
+                        });
+                }, error => {
+                    console.error('Error getting location:', error);
+                });
+            } else {
+                console.error('Geolocation is not supported by this browser.');
+            }
+        }
+
+        let intervalId; // To store the interval ID for continuous signal sending
+        let currentSignal = null; // To store the current signal being sent
+
+        // Function to send signal continuously
+        function sendContinuousSignal(signal) {
+            
+            const url = `http://${ipAddress}/?message=${signal}`;
+            
+            intervalId = setInterval(() => {
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        console.log('Signal sent successfully:', signal);
+                    })
+                    .catch(error => {
+                        console.error('Error sending signal:', error);
+                    });
+            }, 100); // Adjust interval as needed (e.g., 100ms for smoother control)
+        }
+
+        // Function to handle button press
+        function handleButtonPress(signal) {
+            if (currentSignal === null) {
+                currentSignal = signal;
+                sendContinuousSignal(signal);
+            }
+        }
+
+        // Function to handle button release
+        function handleButtonRelease() {
+            clearInterval(intervalId);
+            currentSignal = null;
+        }
+
+        // Event listeners for button touch events
+        document.getElementById('forwardBtn').addEventListener('touchstart', function(event) {
+            event.preventDefault(); // Prevent default touch behavior (like scrolling)
+            handleButtonPress('1');
+        });
+        document.getElementById('backwardBtn').addEventListener('touchstart', function(event) {
+            event.preventDefault(); // Prevent default touch behavior (like scrolling)
+            handleButtonPress('3');
+        });
+        document.getElementById('leftBtn').addEventListener('touchstart', function(event) {
+            event.preventDefault(); // Prevent default touch behavior (like scrolling)
+            handleButtonPress('4');
+        });
+        document.getElementById('rightBtn').addEventListener('touchstart', function(event) {
+            event.preventDefault(); // Prevent default touch behavior (like scrolling)
+            handleButtonPress('2');
+        });
+
+        // Event listeners for button touch end events
+        document.getElementById('forwardBtn').addEventListener('touchend', handleButtonRelease);
+        document.getElementById('backwardBtn').addEventListener('touchend', handleButtonRelease);
+        document.getElementById('leftBtn').addEventListener('touchend', handleButtonRelease);
+        document.getElementById('rightBtn').addEventListener('touchend', handleButtonRelease);
+
+        // Event listener for Send Location button click
+        document.getElementById('sendLocationBtn').addEventListener('click', sendLocation);
+    </script>
+</body>
+</html>
