@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Controller and Location</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div>
+      <h1 style="text-align: center">ANAVI</h1>
+      <h3 style="text-align: center">
+        Autonomous Navigation And Vehicle Intelligence
+      </h3>
+    </div>
+    <div id="tabs">
+      <button class="tabButton" onclick="switchTab('location')">
+        Location
+      </button>
+      <button class="tabButton" onclick="switchTab('remote')">Remote</button>
+    </div>
+    <div id="locationContent">
+      <div id="row">
+        <div id="toggleContainer">
+          <label class="switch">
+            <input type="checkbox" id="toggleLocation" checked />
+            <span class="slider round"></span>
+          </label>
+          Current Location
+        </div>
+        <button id="sendLocation" class="primaryButton">Send Location</button>
+        <button id="routeButton" class="primaryButton">Route</button>
+      </div>
+      <div id="coordinates">
+        <div id="latitude" class="placeholder">Latitude:</div>
+        <div id="longitude" class="placeholder">Longitude:</div>
+      </div>
+      <div id="map"></div>
+    </div>
+    <div id="remoteContent" style="display: none">
+      <div id="controllerGrid">
+        <!-- Controller buttons with arrows only -->
+        <div></div>
+        <button class="controllerButton" id="forwardBtn">↑</button>
+        <div></div>
+        <button class="controllerButton" id="leftBtn">←</button>
+        <div></div>
+        <button class="controllerButton" id="rightBtn">→</button>
+        <div></div>
+        <button class="controllerButton" id="backwardBtn">↓</button>
+        <div></div>
+      </div>
+      <div id="testDiv"></div>
+    </div>
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="script.js"></script>
+    <script src="tabs.js"></script>
+    <script src="map.js"></script>
+    <script src="request.js"></script>
+    <script src="control.js"></script>
+  </body>
+</html>
