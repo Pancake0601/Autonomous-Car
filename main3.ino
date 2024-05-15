@@ -1,8 +1,8 @@
-#include <TinyGPS++.h>
-#include <Wire.h>
-#include <SoftwareSerial.h>
-#include <QMC5883LCompass.h>
-#include <NewPing.h>
+#include <TinyGPS++.h>                                      //Used by Neo-6M-GPS Module
+#include <Wire.h>                                           //Used by QMC-5883L Compass
+#include <SoftwareSerial.h>                                 //Used for Serial Communication in Arduino
+#include <QMC5883LCompass.h>                                //Used by QMC-5883L Compass
+#include <NewPing.h>                                        //Used by Ultrasonic Sensor
 
 #define GPS_RX_PIN 3
 #define GPS_TX_PIN 2
@@ -18,12 +18,6 @@ TinyGPSPlus gps;
 QMC5883LCompass compass;
 
 String input = "";
-
-// typedef struct
-// {
-//   double longitude;
-//   double latitude;
-// } Pair;
 
 int heading_offset = 80;
 
@@ -61,32 +55,14 @@ void loop() {
 
           currentLatitude = gps.location.lat();
           currentLongitude = gps.location.lng();
-          // Serial.print("Current Coordinates: ");
-          // Serial.print(currentLatitude, 6);
-          // Serial.print(", ");
-          // Serial.println(currentLongitude, 6);
-
-          // Serial.print("Target Coordinates: ");
-          // Serial.print(targetLatitude, 6);
-          // Serial.print(", ");
-          // Serial.println(targetLongitude, 6);
 
           distance = TinyGPSPlus::distanceBetween(currentLatitude, currentLongitude, targetLatitude, targetLongitude);
-          // Serial.print("Distance: ");
-          // Serial.println(distance);
-
+      
           bearing = TinyGPSPlus::courseTo(gps.location.lat(), gps.location.lng(), targetLatitude, targetLongitude);
-          // Serial.print("Bearing: ");
-          // Serial.println(bearing);
-
+    
           heading = getHeading();
-          // Serial.print("Compass: ");
-          // Serial.println(heading);
-
+          
           rotationAngle = abs(bearing - heading);
-          // Serial.print("Rotation Angel: ");
-          // Serial.println(rotationAngle);
-
 
           //Adjust control logic based on accurate sensor readings and navigation requirements
           if (distance < 2.5) {
