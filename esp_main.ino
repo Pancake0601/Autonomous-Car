@@ -15,8 +15,8 @@ struct CoordinatePair {
 };
 CoordinatePair coordinatePairs[100];
 
-const char* ssid = "...";
-const char* password = "87654321";
+const char* ssid = "WIFI_NAME";
+const char* password = "WIFI_PASSWORD";
 
 int current_waypoint = 0;
 int waypoint_count = 0;
@@ -124,7 +124,7 @@ void apiRequest() {
   //WiFiClient client;  // Create a WiFiClient object
   HTTPClient http;
   String apiUrl = "https://api.openrouteservice.org/v2/directions/driving-car";
-  apiUrl += "?api_key=5b3ce3597851110001cf6248e79360a53bea4d1cbbb64ec3f7a02692";
+  apiUrl += "?api_key=YOUR_API_KEY";
 
   char temp[50];
   sprintf(temp, "&start=%.7f,%.7f", currentLon, currentLat);
