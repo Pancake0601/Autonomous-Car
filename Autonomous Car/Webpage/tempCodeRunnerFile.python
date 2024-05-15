@@ -1,0 +1,16 @@
+import math
+
+def calculate_midpoint(coord1, coord2):
+    lat1, lon1 = coord1
+    lat2, lon2 = coord2
+    midpoint_lat = (lat1 + lat2) / 2
+    midpoint_lon = (lon1 + lon2) / 2
+    return midpoint_lat, midpoint_lon
+
+# Example coordinates received from the API
+coord1 = (23.141466, 75.794665)  # Example coordinate 1 (latitude, longitude)
+coord2 = (23.141880, 75.794588)  # Example coordinate 2 (latitude, longitude)
+
+# Calculate midpoint
+midpoint = calculate_midpoint(coord1, coord2)
+print("Midpoint coordinates:", midpoint)
