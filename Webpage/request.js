@@ -1,4 +1,4 @@
-const ipAddress = "192.168.43.60"; // Change this to your ESP8266 IP address
+const ipAddress = "ESP8266_IP_address"; // Change this to your ESP8266 IP address
 // Function to send location
 function route() {
   const url = `http://${ipAddress}/?latitude=${latitude}&longitude=${longitude}&route=1`;
